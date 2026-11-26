@@ -1,0 +1,1 @@
+{"name":"creativeflow-oss","version":"0.1.0","private":true,"type":"module","description":"Local-first creative production workflow toolkit","scripts":{"test":"node --test","demo":"node src/cli.js summary examples/board.json"},"engines":{"node":">=20"}}

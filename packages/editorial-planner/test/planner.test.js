@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {planEpisodes,summarizeEpisodes} from '../planner.js';
+const items=[{id:'a',title:'First'},{id:'b',title:'Second',stage:'published'}];
+test('weekly schedule crosses month boundary',()=>assert.deepEqual(planEpisodes(items,{start:'2026-11-27'}).map(x=>x.date),['2026-11-27','2026-12-04']));
+test('does not mutate episodes',()=>{planEpisodes(items,{start:'2026-11-27'});assert.equal(items[0].stage,undefined)});
+test('supports leap days',()=>assert.equal(planEpisodes(items,{start:'2028-02-29',intervalDays:1})[1].date,'2028-03-01'));
+test('rejects invalid calendar dates',()=>assert.throws(()=>planEpisodes(items,{start:'2026-02-29'})));
+test('rejects duplicate ids and invalid stages',()=>{assert.throws(()=>planEpisodes([items[0],items[0]],{start:'2026-01-01'}));assert.throws(()=>planEpisodes([{...items[0],stage:'x'}],{start:'2026-01-01'}))});
+test('rejects invalid cadence',()=>assert.throws(()=>planEpisodes(items,{start:'2026-01-01',intervalDays:0})));
+test('summarizes stages and publication count',()=>{const s=summarizeEpisodes(planEpisodes(items,{start:'2026-01-01'}));assert.equal(s.total,2);assert.equal(s.counts.idea,1);assert.equal(s.published,1)});
+test('handles empty schedule',()=>assert.deepEqual(planEpisodes([],{start:'2026-01-01'}),[]));

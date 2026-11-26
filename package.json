@@ -1,0 +1,1 @@
+{"name":"saldanha-labs","private":true,"type":"module","scripts":{"test":"node --test apps/creativeflow/test/core.test.js packages/editorial-planner/test/planner.test.js"},"engines":{"node":">=20"},"license":"MIT"}

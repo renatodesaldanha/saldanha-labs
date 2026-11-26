@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validateBoard,move,summarize,trackingUrl,toCSV} from '../src/core.js';
+const item={id:'1',title:'Demo',project:'Studio',stage:'planning',channel:'video'};
+test('accepts empty and valid boards',()=>{assert.deepEqual(validateBoard([]),[]);assert.equal(validateBoard([item]).length,1)});
+test('rejects missing fields',()=>assert.throws(()=>validateBoard([{id:'1'}]),/Missing title/));
+test('rejects duplicate IDs',()=>assert.throws(()=>validateBoard([item,item]),/Duplicate/));
+test('rejects invalid stages and channels',()=>{assert.throws(()=>validateBoard([{...item,stage:'x'}]));assert.throws(()=>validateBoard([{...item,channel:'x'}]))});
+test('move does not mutate source',()=>{assert.equal(move([item],'1','review')[0].stage,'review');assert.equal(item.stage,'planning')});
+test('rejects missing ID and invalid destination',()=>{assert.throws(()=>move([item],'2','review'));assert.throws(()=>move([item],'1','x'))});
+test('summarizes every stage',()=>assert.deepEqual(summarize([item]),{planning:1,production:0,review:0,published:0}));
+test('preserves query and fragment when creating UTM',()=>{let u=new URL(trackingUrl('https://example.com/?x=1#demo',{source:'a b'}));assert.equal(u.searchParams.get('x'),'1');assert.equal(u.searchParams.get('utm_source'),'a b');assert.equal(u.hash,'#demo')});
+test('rejects dangerous URL schemes and credentials',()=>{assert.throws(()=>trackingUrl('javascript:alert(1)',{}));assert.throws(()=>trackingUrl('https://u:p@example.com',{}))});
+test('CSV escapes quotes and neutralizes formula-like cells',()=>{let s=toCSV([{...item,title:'=1+2',brief:'he said "hi"'}]);assert.ok(s.includes('"\'=1+2"'));assert.ok(s.includes('"he said ""hi"""'))});

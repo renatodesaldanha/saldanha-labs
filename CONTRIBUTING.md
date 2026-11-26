@@ -1,0 +1,2 @@
+# Contributing
+Describe the actual problem and proposed solution in an issue. Use a separate branch, make a focused change, include regression tests and run `npm test`. A maintainer should review each change for usefulness and correctness. Do not submit synthetic, duplicate or superficial changes to inflate activity. Disclose relevant AI assistance and preserve third-party attribution. Never include confidential data or secrets in examples or bug reports.

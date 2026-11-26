@@ -2,17 +2,21 @@
 
 **Building intelligence. Creating impact.**
 
-Saldanha Labs is an initiative to develop reusable tools for creative production, AI-enabled workflows and intelligent automation.
+An independent open-source initiative focused on reusable creative production, editorial planning and automation tools. The first modules are early previews, independently implemented with AI assistance; they do not claim verified adoption or AI generation capabilities.
 
-## Project status
+| Module | Purpose | Status |
+| --- | --- | --- |
+| [CreativeFlow](apps/creativeflow) | Local-first production board, CLI and portable data | Core tested; browser preview |
+| [Editorial Planner](packages/editorial-planner) | Dependency-free editorial scheduling and production metrics | Core tested; library preview |
 
-This repository is in its initial setup phase. The first planned module, CreativeFlow, is a lightweight creative-production workflow toolkit. Source code, licensing and contribution instructions will be added after review.
+## Getting started
 
-## Principles
+Requires Node.js 20+. No npm dependencies. Clone the repository and run `npm test` from its root. See each module for examples and usage.
 
-- Reproducible, documented and tested software.
-- Respect for upstream licenses and attribution.
-- No proprietary client data, credentials or production configurations.
-- Genuine community feedback and meaningful contributions.
+## Contributing
 
-No released modules or adoption metrics are claimed at this stage.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). We welcome substantive fixes, accessibility testing and real-world feedback. Examples are fictional and no production services or credentials are included. Contributions must respect third-party licenses and attribution. Please do not submit artificial activity.
+
+## License
+
+[MIT](LICENSE) for the independently authored code included here. This license does not cover separate private products, third-party marks or external services.

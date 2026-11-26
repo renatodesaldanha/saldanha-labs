@@ -1,0 +1,5 @@
+[
+ {"id":"demo-1","title":"Product introduction","project":"Sample studio","stage":"planning","channel":"video","brief":"Explain the product in thirty seconds."},
+ {"id":"demo-2","title":"Feature walkthrough","project":"Sample studio","stage":"production","channel":"video","brief":"Show a simple workflow."},
+ {"id":"demo-3","title":"Newsletter teaser","project":"Sample studio","stage":"review","channel":"email"}
+]
