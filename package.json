@@ -1,1 +1,12 @@
-{"name":"saldanha-labs","private":true,"type":"module","scripts":{"test":"node --test apps/creativeflow/test/core.test.js packages/editorial-planner/test/planner.test.js"},"engines":{"node":">=20"},"license":"MIT"}
+{
+  "name": "saldanha-labs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test apps/creativeflow/test/core.test.js packages/editorial-planner/test/planner.test.js packages/story-canvas/test/deck.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

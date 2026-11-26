@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {normalizeDeck,renderDeck,exportNotes} from '../deck.js';
+const example={version:1,title:'Demo',slides:[{id:'a',heading:'Hello',bullets:['First'],notes:'PRIVATE NOTES'},{id:'b',heading:'Next'}]};
+test('normalizes missing optional fields without mutating original',()=>{const d=normalizeDeck(example);assert.deepEqual(d.slides[1].bullets,[]);assert.equal(d.slides[1].notes,'');assert.equal(example.slides[1].notes,undefined)});
+test('rejects invalid version',()=>assert.throws(()=>normalizeDeck({...example,version:2})));
+test('rejects empty and oversized decks',()=>{assert.throws(()=>normalizeDeck({...example,slides:[]}));assert.throws(()=>normalizeDeck({...example,slides:Array(201).fill(example.slides[0])}))});
+test('rejects duplicate and unsafe identifiers',()=>{assert.throws(()=>normalizeDeck({...example,slides:[example.slides[0],example.slides[0]]}));assert.throws(()=>normalizeDeck({...example,slides:[{...example.slides[0],id:'x" onclick="x'}]}))});
+test('rejects invalid heading or bullet data',()=>{assert.throws(()=>normalizeDeck({...example,slides:[{id:'a',heading:' ' }]}));assert.throws(()=>normalizeDeck({...example,slides:[{id:'a',heading:'Valid',bullets:[1]}]}))});
+test('escapes untrusted text instead of rendering markup',()=>{const h=renderDeck({version:1,title:'<script>alert(1)</script>',slides:[{id:'a',heading:'<img src=x onerror=alert(1)>',bullets:['A & B']}]});assert.ok(!h.includes('<script>'));assert.ok(!h.includes('<img'));assert.ok(h.includes('&lt;img'));assert.ok(h.includes('A &amp; B'))});
+test('public HTML never includes speaker notes',()=>assert.ok(!renderDeck(example).includes('PRIVATE NOTES')));
+test('notes export is explicit and preserves order',()=>assert.deepEqual(exportNotes(example).slides.map(s=>s.notes),['PRIVATE NOTES','']));
+test('renders semantic headings, labelled slides and print CSS',()=>{const html=renderDeck(example);assert.ok(html.includes('aria-labelledby="heading-a"'));assert.ok(html.includes('<h2 id="heading-a">Hello</h2>'));assert.ok(html.includes('@media print'));assert.ok(html.indexOf('Hello')<html.indexOf('Next'))});
+test('renderer output is deterministic',()=>assert.equal(renderDeck(example),renderDeck(example)));
