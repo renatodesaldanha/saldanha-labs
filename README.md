@@ -9,10 +9,12 @@ An independent open-source initiative focused on reusable creative production, e
 | [CreativeFlow](apps/creativeflow) | Local-first production board, CLI and portable data | Core tested; browser preview |
 | [Editorial Planner](packages/editorial-planner) | Dependency-free editorial scheduling and production metrics | Core tested; library preview |
 | [Story Canvas Engine](packages/story-canvas) | Portable slide documents, HTML rendering and separate speaker notes | Core tested; render preview |
+| [AI Workflow Toolkit](packages/workflow-toolkit) | Dependency graphs and local async execution | Core tested; library preview |
+| [Prompt Engineering Framework](packages/prompt-framework) | Strict prompt templates and literal output checks | Core tested; library preview |
 
 ## Getting started
 
-Requires Node.js 20+. No npm dependencies. Clone the repository and run `npm test` from its root. See each module for examples and usage.
+Requires Node.js 20+. No npm dependencies. Clone the repository and run `npm test` from its root. See each module for examples and usage. Run `npm run demo` for a local workflow combining editorial planning and prompt templates. No model or API is called.
 
 ## Contributing
 

@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {planWorkflow,runWorkflow} from '../workflow.js';
+const steps=[{id:'finish',handler:'finish',dependsOn:['start']},{id:'start',handler:'start',config:2}];
+test('plans dependency order',()=>assert.deepEqual(planWorkflow(steps).map(s=>s.id),['start','finish']));
+test('does not modify original order',()=>{planWorkflow(steps);assert.equal(steps[0].id,'finish')});
+test('rejects duplicates',()=>assert.throws(()=>planWorkflow([steps[0],steps[0]]),/Duplicate/));
+test('rejects missing dependency',()=>assert.throws(()=>planWorkflow([steps[0]]),/Unknown/));
+test('rejects cycles',()=>assert.throws(()=>planWorkflow([{id:'a',handler:'a',dependsOn:['b']},{id:'b',handler:'b',dependsOn:['a']}]),/cycle/));
+test('awaits handlers and passes dependency results',async()=>{const r=await runWorkflow(steps,{start:async({config})=>config,finish:({inputs})=>inputs.start*3});assert.equal(r.get('finish').value,6)});
+test('preflights handlers without running any',async()=>{let called=false;await assert.rejects(runWorkflow(steps,{start:()=>{called=true}}),/Missing handler/);assert.equal(called,false)});
+test('does not allow inherited handlers',async()=>await assert.rejects(runWorkflow([{id:'a',handler:'toString'}],{}),/Missing handler/));
+test('failure skips dependent but not independent steps',async()=>{const r=await runWorkflow([...steps,{id:'other',handler:'finish'}],{start:()=>{throw Error('failure')},finish:()=>7});assert.equal(r.get('start').status,'failed');assert.equal(r.get('finish').status,'skipped');assert.equal(r.get('other').value,7)});
+test('aborted workflow does not execute',async()=>{const c=new AbortController();c.abort();const r=await runWorkflow(steps,{start:()=>assert.fail(),finish:()=>assert.fail()},{signal:c.signal});assert.equal(r.get('start').reason,'aborted')});

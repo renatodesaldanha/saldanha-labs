@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test apps/creativeflow/test/core.test.js packages/editorial-planner/test/planner.test.js packages/story-canvas/test/deck.test.js"
+    "test": "node --test apps/creativeflow/test/core.test.js packages/editorial-planner/test/planner.test.js packages/story-canvas/test/deck.test.js packages/workflow-toolkit/test/workflow.test.js packages/prompt-framework/test/prompt.test.js",
+    "demo": "node examples/editorial-workflow.js"
   },
   "engines": {
     "node": ">=20"

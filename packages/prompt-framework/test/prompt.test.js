@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {templateKeys,renderPrompt,checkOutput} from '../prompt.js';
+test('extracts unique keys in order',()=>assert.deepEqual(templateKeys('{{a}} {{ b }} {{a}}'),['a','b']));
+test('renders repeated placeholders',()=>assert.equal(renderPrompt('{{a}}/{{a}}',{a:'x'}),'x/x'));
+test('does not reparse variable content',()=>assert.equal(renderPrompt('{{a}}',{a:'{{b}}'}),'{{b}}'));
+test('rejects missing and inherited variables',()=>{assert.throws(()=>renderPrompt('{{a}}',{}));assert.throws(()=>renderPrompt('{{a}}',Object.create({a:'x'})))});
+test('rejects non-string and extra variables',()=>{assert.throws(()=>renderPrompt('{{a}}',{a:1}));assert.throws(()=>renderPrompt('{{a}}',{a:'x',b:'y'}))});
+test('optional extra keys',()=>assert.equal(renderPrompt('{{a}}',{a:'x',b:'y'},{strict:false}),'x'));
+test('rejects malformed delimiters and expressions',()=>{for(const x of ['{{a','a}}','{{a.b}}','{{a()}}'])assert.throws(()=>templateKeys(x))});
+test('limits output size',()=>assert.throws(()=>renderPrompt('{{a}}',{a:'x'.repeat(1000001)}),/size/));
+test('checks literal output requirements',()=>assert.deepEqual(checkOutput('abc',{required:['a'],forbidden:['z'],maxChars:3}),{passed:true,failures:[]}));
+test('reports failed constraints and rejects empty terms',()=>{assert.equal(checkOutput('abc',{required:['z'],forbidden:['b'],maxChars:2}).failures.length,3);assert.throws(()=>checkOutput('x',{required:['']}))});
