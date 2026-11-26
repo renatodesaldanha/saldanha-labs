@@ -16,6 +16,16 @@ An independent open-source initiative focused on reusable creative production, e
 
 Requires Node.js 20+. No npm dependencies. Clone the repository and run `npm test` from its root. See each module for examples and usage. Run `npm run demo` for a local workflow combining editorial planning and prompt templates. No model or API is called.
 
+## Integrated production kit
+
+Turn one editorial plan into six portable files: a schedule, prompt briefs, CreativeFlow JSON and CSV boards, a Story Canvas HTML presentation and separate speaker notes. This example exercises all five modules without a model API or external service.
+
+```sh
+node examples/production-kit-cli.js examples/production-kit-input.json production-kit-output
+```
+
+The output directory must not exist. Import `board.json` into CreativeFlow and open `presentation.html` locally. Use the separate notes JSON for presenter preparation. The included input is fictional; do not publish sensitive data. See [pilot instructions](docs/pilot.md) for a real-world trial and feedback.
+
 ## Browser demos
 
 Serve the repository root with `python -m http.server 8000 --bind 127.0.0.1`, then open `http://127.0.0.1:8000/`. The [demo landing page](index.html) includes the CreativeFlow board, a generated Story Canvas deck and a playground combining the other three libraries. No external model or credentials are required. Browser smoke tests are configured in GitHub Actions; passing browser results have not yet been confirmed.

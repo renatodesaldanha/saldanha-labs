@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { buildProductionKit } from '../examples/production-kit.js';
+const input={project:'Demo studio',start:'2026-12-01',episodes:[{id:'intro',title:'A studio tour'},{id:'qa',title:'Questions'}]};
+test('creates consistent schedule and board IDs',async()=>{const kit=await buildProductionKit(input);assert.deepEqual(kit.schedule.map(x=>x.date),['2026-12-01','2026-12-08']);assert.deepEqual(kit.board.map(x=>x.id),kit.schedule.map(x=>x.id));});
+test('briefs and notes share verified prompts',async()=>{const kit=await buildProductionKit(input);assert.equal(kit.notes.slides[0].notes,kit.briefs[0].prompt);assert.equal(kit.board[0].brief,kit.briefs[0].prompt);assert.ok(kit.briefs[0].prompt.includes('2026-12-01'));});
+test('presentation excludes private speaker notes',async()=>{const kit=await buildProductionKit(input);assert.ok(kit.presentation.includes('A studio tour'));assert.ok(!kit.presentation.includes('Prepare a production outline'));});
+test('escapes HTML and neutralizes CSV formula-like text',async()=>{const kit=await buildProductionKit({...input,episodes:[{id:'a',title:'=<script>alert(1)</script>'}]});assert.ok(kit.presentation.includes('&lt;script&gt;'));assert.ok(!kit.presentation.includes('<script>'));assert.ok(kit.csv.includes('"\'=<script>'));});
+test('does not mutate source input',async()=>{const before=JSON.stringify(input);await buildProductionKit(input);assert.equal(JSON.stringify(input),before);});
+test('rejects bad IDs and duplicate IDs',async()=>{await assert.rejects(buildProductionKit({...input,episodes:[{id:'bad id',title:'Example'}]}));await assert.rejects(buildProductionKit({...input,episodes:[input.episodes[0],input.episodes[0]]}),/Duplicate/);});
+test('rejects invalid dates, empty or sparse inputs',async()=>{await assert.rejects(buildProductionKit({...input,start:'2026-02-29'}));await assert.rejects(buildProductionKit({...input,episodes:[]}));await assert.rejects(buildProductionKit({...input,episodes:Array(1)}));});
+test('supports alternate cadence',async()=>{const kit=await buildProductionKit({...input,intervalDays:2});assert.equal(kit.schedule[1].date,'2026-12-03');});

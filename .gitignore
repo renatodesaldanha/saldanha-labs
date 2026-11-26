@@ -3,3 +3,5 @@ node_modules/
 .env.*
 *.log
 coverage/
+production-kit-output/
+__pycache__/
