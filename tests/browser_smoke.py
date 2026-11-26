@@ -16,6 +16,14 @@ def run():
         page.on('pageerror', lambda error: errors.append(str(error)))
         page.goto(BASE + '/')
         expect(page.get_by_role('heading', name='Saldanha Labs')).to_be_visible()
+        page.get_by_role('link', name='Try the production kit').click()
+        page.get_by_label('Episode titles (one per line)').fill('First episode\nSecond episode')
+        page.get_by_role('button', name='Generate six files').click()
+        expect(page.locator('#kit-downloads button')).to_have_count(6)
+        with page.expect_download() as kit_download:
+            page.get_by_role('button', name='Download schedule.json').click()
+        assert len(json.loads(Path(kit_download.value.path()).read_text())) == 2
+        page.go_back()
         page.get_by_label('Episode title').fill('Browser smoke episode')
         page.get_by_label('Publication date').fill('2027-02-03')
         page.get_by_role('button', name='Run example').click()

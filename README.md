@@ -18,6 +18,8 @@ Requires Node.js 20+. No npm dependencies. Clone the repository and run `npm tes
 
 ## Integrated production kit
 
+Try the [browser production kit](demos/production-kit.html) when serving the repository locally or via GitHub Pages (once enabled). It generates six individually downloadable files without installing Node.js on the client. Browser validation remains pending.
+
 Turn one editorial plan into six portable files: a schedule, prompt briefs, CreativeFlow JSON and CSV boards, a Story Canvas HTML presentation and separate speaker notes. This example exercises all five modules without a model API or external service.
 
 ```sh
